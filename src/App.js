@@ -1,21 +1,45 @@
+import React from "react";
 import TodoItem from "./components/TodoItem";
 import Summary from "./components/Summary";
 import todoItemsDemoData from "./data/todoItemsDemoData";
 
-function App() {
-  const todoComponenets = todoItemsDemoData.map((todoItem) => (
-    <TodoItem todoItem={todoItem} />
-  ));
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = { todos: todoItemsDemoData };
+    this.handleChange = this.handleChange.bind(this);
+  }
 
-  return (
-    <div className="container-fluid">
-      <h1 className="display-1"> Todo List </h1>
-      <hr />
-      {/*using Json object*/}
-      {todoComponenets}
+  handleChange(id) {
+    this.setState((prevState) => {
+      const updatedTodos = prevState.todos.map((todoItem) => {
+        if (todoItem.id === id) {
+          todoItem.completed = !todoItem.completed;
+          console.log(todoItem.completed);
+        }
+        return todoItem;
+      });
+      return { todos: updatedTodos };
+    });
+  }
 
-      <Summary />
-    </div>
-  );
+  render() {
+    const todoComponents = this.state.todos.map((todoItem) => (
+      <TodoItem
+        key={todoItem.id}
+        todoItem={todoItem}
+        handleChange={this.handleChange}
+      />
+    ));
+    return (
+      <div className="container-fluid">
+        <h1 className="display-1"> Todo List </h1>
+        <hr />
+        {todoComponents}
+        <Summary />
+      </div>
+    );
+  }
 }
+
 export default App;
