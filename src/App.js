@@ -8,14 +8,21 @@ class App extends React.Component {
     super(props);
     this.state = { todos: todoItemsDemoData };
     this.handleChange = this.handleChange.bind(this);
+    //needed to bind functions to be used in Component methods r.g render
+    this.x = this.x.bind(this);
   }
 
   handleChange(id) {
     this.setState((prevState) => {
-      const updatedTodos = prevState.todos.map((todoItem) => {
+      let updatedTodos = prevState.todos.map((todoItem) => {
         if (todoItem.id === id) {
-          todoItem.completed = !todoItem.completed;
-          console.log(todoItem.completed);
+          todoItem = {
+            //...to break down an object
+            ...todoItem,
+            completed: !todoItem.completed
+          };
+          //this is buggy
+          //todoItem.completed = !todoItem.completed;
         }
         return todoItem;
       });
@@ -23,7 +30,11 @@ class App extends React.Component {
     });
   }
 
+  x() {
+    console.log("xx");
+  }
   render() {
+    this.x();
     const todoComponents = this.state.todos.map((todoItem) => (
       <TodoItem
         key={todoItem.id}
@@ -31,13 +42,19 @@ class App extends React.Component {
         handleChange={this.handleChange}
       />
     ));
-
+    const selectedCheckedBoxes = this.state.todos.filter(
+      (elem) => elem.completed === true
+    ).length;
+    const totalItems = this.state.todos.length;
     return (
       <div className="container-fluid">
         <h1 className="display-1"> Todo List </h1>
         <hr />
         {todoComponents}
-        <Summary todoItems={this.state.todos} />
+        <Summary
+          selectedCheckedBoxes={selectedCheckedBoxes}
+          totalItems={totalItems}
+        />
       </div>
     );
   }
