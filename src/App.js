@@ -4,8 +4,8 @@ import Summary from "./components/Summary";
 import todoItemsDemoData from "./data/todoItemsDemoData";
 
 class App extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { todos: todoItemsDemoData };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -31,12 +31,13 @@ class App extends React.Component {
         handleChange={this.handleChange}
       />
     ));
+
     return (
       <div className="container-fluid">
         <h1 className="display-1"> Todo List </h1>
         <hr />
         {todoComponents}
-        <Summary />
+        <Summary todoItems={this.state.todos} />
       </div>
     );
   }
